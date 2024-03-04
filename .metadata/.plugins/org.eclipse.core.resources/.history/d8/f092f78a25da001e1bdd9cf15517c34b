@@ -1,0 +1,74 @@
+package consumer;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import producer.CoffeeCustomizationService;
+
+public class Activator implements BundleActivator {
+	private ServiceReference<CoffeeCustomizationService> serviceReference;
+    private ExecutorService executorService;
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        serviceReference = context.getServiceReference(CoffeeCustomizationService.class);
+        executorService = Executors.newCachedThreadPool();
+        for (int i = 1; i <= 5; i++) { // Simulate 5 customers placing orders concurrently
+            executorService.submit(new OrderThread(context));
+        }
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        executorService.shutdown();
+        context.ungetService(serviceReference);
+    }
+
+    private class OrderThread implements Runnable {
+        private BundleContext context;
+
+        public OrderThread(BundleContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                System.out.print("Enter your order number (starting with 'E' for Espresso, 'L' for Latte, or 'C' for Cappuccino): ");
+                String orderNumber = reader.readLine().trim().toUpperCase();
+                if (!isValidOrderNumber(orderNumber)) {
+                    System.out.println("Invalid order number format. Please start with 'E' for Espresso, 'L' for Latte, or 'C' for Cappuccino.");
+                    return;
+                }
+
+                CoffeeCustomizationService customizationService = context.getService(serviceReference);
+                if (customizationService != null) {
+                    System.out.print("Enter the customization option: ");
+                    int customizationOption = Integer.parseInt(reader.readLine());
+                    String customizedCoffee = customizationService.customizeCoffee(orderNumber, customizationOption);
+                    System.out.println("Customized Coffee for Order " + orderNumber + ": " + customizedCoffee);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private boolean isValidOrderNumber(String orderNumber) {
+            return orderNumber.matches("[ELC]\\d+");
+        }
+    }
+}

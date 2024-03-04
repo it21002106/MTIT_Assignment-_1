@@ -1,0 +1,20 @@
+package producer;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
+public class drinkCustomizeServiceImpl implements drinkCustomizeService, BundleActivator {
+	
+	public void start(BundleContext context) throws Exception{
+		System.out.println("Drink Customize Bundle Started!");
+		context.registerService(drinkCustomizeService.class.getName(), new drinkCustomizeServiceImpl(), null);
+	}
+
+
+	public void stop(BundleContext context) throws Exception {
+		System.out.println("Drink Customize Bundle Stopped!");
+	}
+	
+	
+
+}

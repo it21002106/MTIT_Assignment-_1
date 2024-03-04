@@ -1,0 +1,29 @@
+package producer;
+
+public class CoffeeCustomizationServiceImpl implements CoffeeCustomizationService {
+	public String customizeCoffee(String orderNumber) {
+        String coffeeType = identifyCoffeeType(orderNumber);
+        String customizationOptions = getCustomizationOptions(coffeeType);
+        return customizationOptions;
+    }
+
+    private String identifyCoffeeType(String orderNumber) {
+        if (orderNumber.startsWith("E001")) {
+            return "Espresso";
+        } else if (orderNumber.startsWith("L001")) {
+            return "Latte";
+        } else if (orderNumber.startsWith("C001")) {
+            return "Cappuccino";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    private String getCustomizationOptions(String coffeeType) {
+        // Implement customization options based on the coffee type
+        // This could include presenting a menu of customization options for each coffee type
+        // Return a string representing the customization options
+        // Example: "Customization options for Latte: Size, Milk type, Milk texture, Flavorings, Sweeteners"
+        return "Customization options for " + coffeeType + ": Size, Milk type, Milk texture, Flavorings, Sweeteners";
+    }
+}

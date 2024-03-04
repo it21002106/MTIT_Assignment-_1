@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consumer
+Bundle-SymbolicName: consumer
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: consumer.Activator
+Bundle-Vendor: ranjula
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: consumer
+Import-Package: org.osgi.framework;version="1.3.0",
+ producer
+Bundle-ActivationPolicy: lazy

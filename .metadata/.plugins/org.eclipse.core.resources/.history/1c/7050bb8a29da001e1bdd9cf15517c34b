@@ -1,0 +1,86 @@
+package producer;
+
+public class CoffeeCustomizationServiceImpl implements CoffeeCustomizationService {
+    public String customizeCoffee(String orderNumber, int customizationOption) {
+        String coffeeType = identifyCoffeeType(orderNumber);
+        String customizedCoffee = customize(coffeeType, customizationOption);
+        return customizedCoffee;
+    }
+
+    private String identifyCoffeeType(String orderNumber) {
+        if (orderNumber.startsWith("E001")) {
+            return "Espresso";
+        } else if (orderNumber.startsWith("L001")) {
+            return "Latte";
+        } else if (orderNumber.startsWith("C001")) {
+            return "Cappuccino";
+        } else {
+            return "Unknown Order";
+        }
+    }
+
+    private String customize(String coffeeType, int customizationOption) {
+        switch (coffeeType) {
+            case "Espresso":
+                return customizeEspresso(customizationOption);
+            case "Latte":
+                return customizeLatte(customizationOption);
+            case "Cappuccino":
+                return customizeCappuccino(customizationOption);
+            default:
+                return "Unknown Order";
+        }
+    }
+
+    private String customizeEspresso(int option) {
+        switch (option) {
+            case 1:
+                return "Single shot";
+            case 2:
+                return "Double shot";
+            case 3:
+                return "Ristretto";
+            case 4:
+                return "Lungo";
+            case 5:
+                return "Macchiato";
+            case 6:
+                return "Americano";
+            default:
+                return "Unknown Option";
+        }
+    }
+
+    private String customizeLatte(int option) {
+        switch (option) {
+        	case 1:
+            	return "Milk type";
+        	case 2:
+            	return "Milk texture";
+        	case 3:
+            	return "Flavorings";
+        	case 4:
+            	return "Sweeteners";
+
+            default:
+                return "Unknown Option";
+        }
+    }
+
+    private String customizeCappuccino(int option) {
+        switch (option) {
+    		case 1:
+        		return "Milk type";
+    		case 2:
+        		return "Milk texture";
+    		case 3:
+        		return "Flavorings";
+    		case 4:
+        		return "Sweeteners";
+    		case 5:
+    			return "Toppings";
+            default:
+                return "Unknown Option";
+        }
+    }
+}

@@ -1,0 +1,56 @@
+package consumer;
+
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import producer.CoffeeCustomizationService;
+
+public class Activator implements BundleActivator {
+
+	private ServiceReference<CoffeeCustomizationService> serviceReference;
+    private ExecutorService executorService;
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        serviceReference = context.getServiceReference(CoffeeCustomizationService.class);
+        executorService = Executors.newCachedThreadPool();
+        for (int i = 1; i <= 5; i++) { // Simulate 5 customers placing orders concurrently
+            executorService.submit(new OrderThread(context, i));
+        }
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        executorService.shutdown();
+        context.ungetService(serviceReference);
+    }
+
+    private class OrderThread implements Runnable {
+        private BundleContext context;
+        private int orderNumber;
+
+        public OrderThread(BundleContext context, int orderNumber) {
+            this.context = context;
+            this.orderNumber = orderNumber;
+        }
+
+        @Override
+        public void run() {
+            CoffeeCustomizationService customizationService = context.getService(serviceReference);
+            if (customizationService != null) {
+                int customizationOption = (orderNumber % 6) + 1; // Simulate different customization options for each order
+                String customizedCoffee = customizationService.customizeCoffee(generateOrderNumber(orderNumber), customizationOption);
+                System.out.println("Order " + orderNumber + " - Customized Coffee: " + customizedCoffee);
+            }
+        }
+
+        private String generateOrderNumber(int orderNumber) {
+            return "E001" + String.format("%03d", orderNumber); // Simulate order number generation
+        }
+    }
+
+}

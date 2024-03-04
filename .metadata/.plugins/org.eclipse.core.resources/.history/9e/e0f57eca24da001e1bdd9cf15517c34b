@@ -1,0 +1,35 @@
+package consumer;
+
+import java.util.Scanner;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import producer.CoffeeCustomizationService;
+
+public class Activator implements BundleActivator {
+
+	private ServiceReference<CoffeeCustomizationService> serviceReference;
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        serviceReference = context.getServiceReference(CoffeeCustomizationService.class);
+        CoffeeCustomizationService customizationService = context.getService(serviceReference);
+        if (customizationService != null) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter the order number: ");
+            String orderNumber = scanner.nextLine();
+            System.out.print("Enter the customization option: ");
+            int customizationOption = scanner.nextInt();
+            String customizedCoffee = customizationService.customizeCoffee(orderNumber, customizationOption);
+            System.out.println("Customized Coffee: " + customizedCoffee);
+            scanner.close();
+        }
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        context.ungetService(serviceReference);
+    }
+
+}

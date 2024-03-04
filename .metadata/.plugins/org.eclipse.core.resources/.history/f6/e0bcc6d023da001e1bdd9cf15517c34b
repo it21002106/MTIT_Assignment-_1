@@ -1,0 +1,69 @@
+package producer;
+
+public class CoffeeCustomizationServiceImpl implements CoffeeCustomizationService {
+    public String customizeCoffee(String orderNumber, int customizationOption) {
+        String coffeeType = identifyCoffeeType(orderNumber);
+        String customizedCoffee = customize(coffeeType, customizationOption);
+        return customizedCoffee;
+    }
+
+    private String identifyCoffeeType(String orderNumber) {
+        if (orderNumber.startsWith("E001")) {
+            return "Espresso";
+        } else if (orderNumber.startsWith("L001")) {
+            return "Latte";
+        } else if (orderNumber.startsWith("C001")) {
+            return "Cappuccino";
+        } else {
+            return "Unknown Order";
+        }
+    }
+
+    private String customize(String coffeeType, int customizationOption) {
+        switch (coffeeType) {
+            case "Espresso":
+                return customizeEspresso(customizationOption);
+            case "Latte":
+                return customizeLatte(customizationOption);
+            case "Cappuccino":
+                return customizeCappuccino(customizationOption);
+            default:
+                return "Unknown Order";
+        }
+    }
+
+    private String customizeEspresso(int option) {
+        switch (option) {
+            case 1:
+                return "Single shot Espresso";
+            case 2:
+                return "Double shot Espresso";
+            case 3:
+                return "Ristretto Espresso";
+            case 4:
+                return "Lungo Espresso";
+            case 5:
+                return "Macchiato Espresso";
+            case 6:
+                return "Americano Espresso";
+            default:
+                return "Unknown Option";
+        }
+    }
+
+    private String customizeLatte(int option) {
+        switch (option) {
+            // Implement customization options for Latte
+            default:
+                return "Unknown Option";
+        }
+    }
+
+    private String customizeCappuccino(int option) {
+        switch (option) {
+            // Implement customization options for Cappuccino
+            default:
+                return "Unknown Option";
+        }
+    }
+}

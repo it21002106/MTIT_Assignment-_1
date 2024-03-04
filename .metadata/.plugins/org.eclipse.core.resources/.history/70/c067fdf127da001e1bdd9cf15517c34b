@@ -1,0 +1,62 @@
+package consumer;
+
+import java.util.Scanner;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
+import producer.CoffeeCustomizationService;
+
+public class Activator implements BundleActivator {
+	private ServiceReference<CoffeeCustomizationService> serviceReference;
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        serviceReference = context.getServiceReference(CoffeeCustomizationService.class);
+        CoffeeCustomizationService customizationService = context.getService(serviceReference);
+        Scanner scanner = new Scanner(System.in);
+        try {
+            boolean continueOrdering = true;
+            while (continueOrdering) {
+                System.out.print("Enter the order number: ");
+                String orderNumber = scanner.nextLine();
+                String coffeeType = identifyCoffeeType(orderNumber);
+                if (coffeeType.equals("Unknown Order")) {
+                    System.out.println("Invalid order number. Please start with 'E' for Espresso, 'L' for Latte, or 'C' for Cappuccino.");
+                    continue;
+                }
+                System.out.println("You ordered: " + coffeeType);
+                System.out.print("Enter the customization option: ");
+                int customizationOption = scanner.nextInt();
+                String customizedCoffee = customizationService.customizeCoffee(coffeeType, customizationOption);
+                System.out.println("Customized Coffee: " + customizedCoffee);
+                scanner.nextLine(); // Consume the newline character
+                System.out.print("Are there another order (y/n)? ");
+                String continueInput = scanner.nextLine();
+                if (!continueInput.equalsIgnoreCase("y")) {
+                    continueOrdering = false;
+                }
+            }
+        } finally {
+            scanner.close();
+        }
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        context.ungetService(serviceReference);
+    }
+
+    private String identifyCoffeeType(String orderNumber) {
+        if (orderNumber.startsWith("E")) {
+            return "Espresso";
+        } else if (orderNumber.startsWith("L")) {
+            return "Latte";
+        } else if (orderNumber.startsWith("C")) {
+            return "Cappuccino";
+        } else {
+            return "Unknown Order";
+        }
+    }
+}

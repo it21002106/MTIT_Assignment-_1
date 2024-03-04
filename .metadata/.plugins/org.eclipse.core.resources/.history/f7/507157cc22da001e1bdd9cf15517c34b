@@ -1,0 +1,54 @@
+package producer;
+
+public class CoffeeCustomizationServiceImpl implements CoffeeCustomizationService {
+	public String customizeCoffee(String orderNumber) {
+        String coffeeType = identifyCoffeeType(orderNumber);
+        String customizationOptions = getCustomizationOptions(coffeeType);
+        return customizationOptions;
+    }
+
+    private String identifyCoffeeType(String orderNumber) {
+        if (orderNumber.startsWith("E001")) {
+            return "Espresso";
+        } else if (orderNumber.startsWith("L001")) {
+            return "Latte";
+        } else if (orderNumber.startsWith("C001")) {
+            return "Cappuccino";
+        } else {
+            return "Unknown Order";
+        }
+    }
+
+    private String getCustomizationOptions(String coffeeType) {
+    	StringBuilder options = new StringBuilder();
+        options.append("Customization options for ").append(coffeeType).append(": \n");
+        switch (coffeeType) {
+            case "Espresso":
+                options.append("1. Single shot\n");
+                options.append("2. Double shot\n");
+                options.append("3. Ristretto\n");
+                options.append("4. Lungo\n");
+                options.append("5. Macchiato\n");
+                options.append("6. Americano\n");
+                break;
+            case "Latte":
+                options.append("1. Size\n");
+                options.append("2. Milk type\n");
+                options.append("3. Milk texture\n");
+                options.append("4. Flavorings\n");
+                options.append("5. Sweeteners\n");
+                break;
+            case "Cappuccino":
+                options.append("1. Size\n");
+                options.append("2. Milk type\n");
+                options.append("3. Milk ratio\n");
+                options.append("4. Flavored cappuccino\n");
+                options.append("5. Toppings\n");
+                break;
+            default:
+                options.append("Unknown coffee type\n");
+                break;
+        }
+        return options.toString();
+    }
+}

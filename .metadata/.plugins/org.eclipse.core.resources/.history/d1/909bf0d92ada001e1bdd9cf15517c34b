@@ -1,0 +1,5 @@
+package producer;
+
+public interface CoffeeCustomizationService {
+	String customizeCoffee(String orderNumber, int customizationOption);
+}
