@@ -1,0 +1,5 @@
+package orderproducer;
+
+public class CoffeeServiceImpl {
+
+}
